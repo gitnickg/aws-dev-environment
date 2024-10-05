@@ -33,3 +33,21 @@ resource "aws_internet_gateway" "icns_internet_gateway" {
     Name = "dev-igv"
   }
 }
+
+# Route Table
+# Docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table
+resource "aws_route_table" "icns_public_rt" {
+    vpc_id = aws_vpc.icns_vpc.id
+
+    tags = {
+      Name = "dev_public_rt"
+    }
+}
+
+# Route
+# Docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route
+resource "aws_route" "default_route" {
+    route_table_id = aws_route_table.icns_public_rt.id
+    destination_cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.icns_internet_gateway.id
+}
