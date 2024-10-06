@@ -110,7 +110,7 @@ resource "aws_instance" "dev_node" {
   # Docs: https://www.terraform.io/language/resources/provisioners/syntax
   # Docs: https://www.terraform.io/language/functions/templatefile
   provisioner "local-exec" {
-    command = templatefile("linux-ssh-config.tpl", {
+    command = templatefile("${var.host_os}-ssh-config.tpl", {
         hostname = self.public_ip,
         user = "ubuntu",
         identityfile = "~/.ssh/icnskey"
