@@ -80,3 +80,10 @@ resource "aws_security_group" "icns_sg_" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+# SSH Key Pair
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair
+resource "aws_key_pair" "icns_auth" {
+  key_name   = "icnskey"
+  public_key = file("~/.ssh/icnskey.pub")
+}
