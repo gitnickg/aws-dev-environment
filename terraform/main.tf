@@ -110,11 +110,11 @@ resource "aws_instance" "dev_node" {
   # Docs: https://www.terraform.io/language/resources/provisioners/syntax
   # Docs: https://www.terraform.io/language/functions/templatefile
   provisioner "local-exec" {
-    command = templatefile("${var.host_os}-ssh-config.tpl", {
+    command = templatefile("${var.host_os}-ssh-config.tpl", { # set a variable for host_os
         hostname = self.public_ip,
         user = "ubuntu",
         identityfile = "~/.ssh/icnskey"
     })
-    interpreter = [ "bash", "-c" ]
+    interpreter = var.host_os == "windows" ? ["Powershell", "-Command"] : [ "bash", "-c" ] # expression to check what host_os is set in the var file
   }
 }
