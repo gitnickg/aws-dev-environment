@@ -97,12 +97,24 @@ resource "aws_instance" "dev_node" {
   vpc_security_group_ids = [aws_security_group.icns_sg_.id]
   subnet_id              = aws_subnet.icns_public_subnet.id
   user_data              = file("userdata.tpl") # bash script that installs docker
-
+  
   root_block_device {
     volume_size = 10
   }
 
   tags = {
     Name = "dev-node"
+  }
+
+  # Provisioner - used as a last resort, use chef, puppet, etc
+  # Docs: https://www.terraform.io/language/resources/provisioners/syntax
+  # Docs: https://www.terraform.io/language/functions/templatefile
+  provisioner "local-exec" {
+    command = templatefile("linux-ssh-config.tpl", {
+        hostname = self.public_ip,
+        user = "ubuntu",
+        identityfile = "~/.ssh/icnskey"
+    })
+    interpreter = [ "bash", "-c" ]
   }
 }
