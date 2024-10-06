@@ -58,3 +58,25 @@ resource "aws_route_table_association" "icns_route_table_association" {
   subnet_id      = aws_subnet.icns_public_subnet.id
   route_table_id = aws_route_table.icns_public_rt.id
 }
+
+# Security Group
+# Docs: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+resource "aws_security_group" "icns_sg_" {
+  name        = "dev_sg"
+  description = "dev security group"
+  vpc_id      = aws_vpc.icns_vpc.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"          # allows all protocols
+    cidr_blocks = ["0.0.0.0/0"] # enter your own ip here
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
